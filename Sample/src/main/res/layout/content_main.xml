@@ -20,29 +20,29 @@
             android:id="@+id/image1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerCrop" />
+            android:layout_margin="30px"
+            android:layout_weight="1"/>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/image2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerCrop" />
+            android:layout_margin="30px"
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/image3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerCrop" />
+            android:layout_margin="30px"
+            android:layout_weight="1" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/image4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerCrop" />
+            android:layout_margin="30px"
+            android:layout_weight="1" />
     </LinearLayout>
 
 
@@ -67,12 +67,12 @@
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/app_compat_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/button"
