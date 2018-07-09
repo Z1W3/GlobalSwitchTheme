@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,7 +47,6 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
 
     @Override
     public void setBackground(int resId, BitmapDrawable drawable) {
-        Log.e("AA", "###############    resId = " + resId);
         findViewById(resId).setBackground(drawable);
     }
 

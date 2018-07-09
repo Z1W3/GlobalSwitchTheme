@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.view.View;
 
 import java.util.Vector;
@@ -149,7 +148,6 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
         public void run() {
             for (int id : source.getResIdPendingChangeTheme()) {
                 String name = source.resId2EntryName(id);
-                Log.e("TAG", String.format("A name = %s", name));
                 final Vector<GTData> datas = source.getArrayMapOfGlobalThemeResources().get(name);
                 if (!(datas != null && datas.size() > 0)) {
                     continue;
@@ -165,7 +163,6 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                     continue;
                 }
                 for (GTData mGTData : datas) {
-                    Log.e("TAG", String.format("B name = %s, type = %d", name, mGTData.getType()));
                     switch (mGTData.getType()) {
                         case ViewType.TYPE_BACKGROUND_DRAWABLE:
                             try {

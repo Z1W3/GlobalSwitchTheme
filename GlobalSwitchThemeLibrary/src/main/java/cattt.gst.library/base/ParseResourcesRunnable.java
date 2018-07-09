@@ -4,7 +4,6 @@ package cattt.gst.library.base;
 import android.os.Handler;
 import android.os.Message;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
