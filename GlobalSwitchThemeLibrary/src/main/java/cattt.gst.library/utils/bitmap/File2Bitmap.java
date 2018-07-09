@@ -3,17 +3,20 @@ package cattt.gst.library.utils.bitmap;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import cattt.gst.library.utils.logger.Log;
+
 public class File2Bitmap {
+    private static Log logger = Log.getLogger(File2Bitmap.class);
 
     /**
-     * @deprecated
      * @see #decodeFile(File, View)
+     * @deprecated
      */
     public static Bitmap decodeFile(String filePath) throws IOException {
         Bitmap b;
@@ -52,7 +55,6 @@ public class File2Bitmap {
 
     public static Bitmap decodeFile(String filePath, View view) throws IOException {
         Bitmap b;
-        Log.e("TAG", "filePath = " + filePath);
         File f = new File(filePath);
         if (f == null) {
             return null;
@@ -72,7 +74,9 @@ public class File2Bitmap {
 
         //Decode with inSampleSize
         BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = computeScale(o, view);
+        int scale = computeScale(o, view);
+        logger.e("decodeFile() -> scale = " + scale);
+        o2.inSampleSize = scale;
         fis = new FileInputStream(f);
         b = BitmapFactory.decodeStream(fis, null, o2);
         fis.close();
@@ -109,12 +113,20 @@ public class File2Bitmap {
      */
     private static int computeScale(BitmapFactory.Options options, View view) {
         int scaleSize = 1;
-        if (options.outWidth > view.getWidth() ||  options.outHeight >  view.getHeight()){
-            int widthScale = Math.round((float) options.outWidth / (float) view.getWidth());
-            int heightScale = Math.round((float) options.outHeight / (float) view.getHeight());
-            if (widthScale >= heightScale){
+        int measuredWidth = view.getMeasuredWidth();
+        int measuredHeight = view.getMeasuredHeight();
+        logger.e("measuredWidth = %d , measuredHeight = %d", measuredWidth, measuredHeight);
+        if (measuredWidth == 0 || measuredHeight == 0) {
+            return scaleSize;
+        }
+
+        if (options.outWidth > measuredWidth
+                || options.outHeight > measuredHeight) {
+            int widthScale = Math.round((float) options.outWidth / (float) measuredWidth);
+            int heightScale = Math.round((float) options.outHeight / (float) measuredHeight);
+            if (widthScale >= heightScale) {
                 scaleSize = widthScale;
-            }else {
+            } else {
                 scaleSize = heightScale;
             }
         }
