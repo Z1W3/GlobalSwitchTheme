@@ -1,6 +1,8 @@
 package cattt.gst.library.base;
 
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Xml;
@@ -37,6 +39,7 @@ public class ParseResourcesRunnable implements Runnable {
     ));
 
     private File target;
+    private EventHandler handler = new EventHandler();
 
     public ParseResourcesRunnable(File target) {
         this.target = target;
@@ -54,7 +57,8 @@ public class ParseResourcesRunnable implements Runnable {
                 Vector<GTData> mVector = getVector(name, map);
                 //FOLDER.get(0) = "background"
                 //FOLDER.get(1) = "image"
-                mVector.add(new GTData(FOLDER.get(0).equalsIgnoreCase(parentFolderName) ? ViewType.TYPE_BACKGROUND_DRAWABLE : ViewType.TYPE_IMAGE, path));
+                int type = FOLDER.get(0).equalsIgnoreCase(parentFolderName) ? ViewType.TYPE_BACKGROUND_DRAWABLE : ViewType.TYPE_IMAGE_DRAWABLE;
+                mVector.add(new GTData(type, path));
                 map.put(name, mVector);
             }
             if (COLOR_SUFFIX_NAME.contains(suffixName)) {
@@ -65,7 +69,7 @@ public class ParseResourcesRunnable implements Runnable {
                 }
             }
         }
-        onResources(map);
+        handler.obtainMessage(0, map).sendToTarget();
     }
 
     private Vector<GTData> getVector(String key, ArrayMap<String, Vector<GTData>> map) {
@@ -74,10 +78,6 @@ public class ParseResourcesRunnable implements Runnable {
         } else {
             return new Vector<>();
         }
-    }
-
-    private void onResources(ArrayMap<String, Vector<GTData>> map) {
-        GlobalThemeMonitor.get().onGlobalThemeResourcesOfMessage(map);
     }
 
     private String[] getTargetPaths(File target) {
@@ -133,5 +133,14 @@ public class ParseResourcesRunnable implements Runnable {
             eventType = parser.next();
         }
         return map;
+    }
+
+    private static class EventHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            SingleGlobalThemeArrayMap.get().setGlobalThemeResourcesMap((ArrayMap<String, Vector<GTData>>) msg.obj);
+            GlobalThemeMonitor.get().onSwitchResourcesOfMessage();
+        }
     }
 }

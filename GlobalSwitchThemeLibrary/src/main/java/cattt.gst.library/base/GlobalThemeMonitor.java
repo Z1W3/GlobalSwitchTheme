@@ -2,15 +2,13 @@ package cattt.gst.library.base;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.ArrayMap;
 
 import java.util.Vector;
 
 import cattt.gst.library.base.callback.OnGlobalThemeListener;
-import cattt.gst.library.base.model.GTData;
 
 public class GlobalThemeMonitor {
-    private static final int MSG_CODE_RESOURCES = 10000;
+    private static final int MSG_CODE_SWITCH = 10000;
 
     private Vector<OnGlobalThemeListener> mListeners = new Vector<>();
 
@@ -31,15 +29,15 @@ public class GlobalThemeMonitor {
         }
     }
 
-    protected void onGlobalThemeResourcesOfMessage(ArrayMap<String, Vector<GTData>> map) {
-        handler.obtainMessage(MSG_CODE_RESOURCES, map).sendToTarget();
+    protected void onSwitchResourcesOfMessage() {
+        handler.obtainMessage(MSG_CODE_SWITCH).sendToTarget();
     }
 
 
-    private void onGlobalThemeResources(ArrayMap<String, Vector<GTData>> map) {
+    private void onSwitchResources() {
         if (mListeners != null) {
             for (OnGlobalThemeListener listener : mListeners) {
-                listener.onGlobalThemeResources(map);
+                listener.onSwitchResources();
             }
         }
     }
@@ -54,8 +52,8 @@ public class GlobalThemeMonitor {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case MSG_CODE_RESOURCES:
-                    monitor.onGlobalThemeResources((ArrayMap<String, Vector<GTData>>) msg.obj);
+                case MSG_CODE_SWITCH:
+                    monitor.onSwitchResources();
                     break;
             }
 

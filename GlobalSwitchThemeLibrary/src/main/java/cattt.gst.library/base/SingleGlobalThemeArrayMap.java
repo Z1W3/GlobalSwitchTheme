@@ -14,6 +14,10 @@ public class SingleGlobalThemeArrayMap {
         return map;
     }
 
+    public void setGlobalThemeResourcesMap(ArrayMap<String, Vector<GTData>> map) {
+        this.map = map;
+    }
+
     private static final class Helper {
         private static final SingleGlobalThemeArrayMap INSTANCE = new SingleGlobalThemeArrayMap();
     }

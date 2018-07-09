@@ -7,7 +7,17 @@
         android:id="@+id/action_download"
         android:menuCategory="container"
         android:orderInCategory="100"
-        android:title="下载"
-        android:titleCondensed="下载"
+        android:title="下载主题"
+        android:titleCondensed="下载主题"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_switch"
+       android:menuCategory="container"
+        android:orderInCategory="101"
+        android:title="解压并切换主题"
+        android:titleCondensed="切换主题"
+        app:showAsAction="ifRoom" />
+
+
 </menu>

@@ -12,19 +12,15 @@ public interface GlobalThemeable {
 
     String resId2EntryName(int resId);
 
-    boolean isFrontPage();
+    int[] getResIdPendingChangeTheme();
 
-    boolean isEmptyResId(int[] ids);
+    boolean isEmptyResId();
 
-    boolean isEmptyGlobalThemeResourcesMap(ArrayMap<String, Vector<GTData>> map);
+    boolean isEmptyGlobalThemeResourcesMap();
 
-    boolean isAllowLoadingGlobalThemeOfView(int[] ids);
+    boolean isAllowLoadingGlobalThemeOfView();
 
-    void performToggleGlobalThemeResources(int[] ids);
+    void performSwitchThemeByAsync();
 
-    void setTextColorByInstanceofView(View view, @ColorInt int color);
-    void setTextHintColorByInstanceofView(View view, @ColorInt int color);
-
-    void setImageByInstanceofView(View view, Drawable drawable);
-
+    void checkAllowLoadingGlobalThemeOfView();
 }
