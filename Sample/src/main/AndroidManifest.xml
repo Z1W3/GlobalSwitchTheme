@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden|stateUnchanged">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,17 +24,20 @@
 
         <activity
             android:name=".FirstActivity"
-            android:label="FirstActivity">
+            android:label="FirstActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged">
 
         </activity>
         <activity
             android:name=".SecondActivity"
-            android:label="SecondActivity">
+            android:label="SecondActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged">
 
         </activity>
         <activity
             android:name=".ThirdActivity"
-            android:label="ThirdActivity">
+            android:label="ThirdActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged">
 
         </activity>
     </application>
