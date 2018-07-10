@@ -1,6 +1,6 @@
 package cattt.gst.library.base.model.emdata;
 
-public class ViewType {
+public class MatchType {
     public static final int TYPE_BACKGROUND_DRAWABLE = 0;
     public static final int TYPE_IMAGE_DRAWABLE = 1;
     public static final int TYPE_BACKGROUND_COLOR = 2;

@@ -14,7 +14,7 @@ import cattt.gst.library.base.callback.OnGlobalThemeListener;
 import cattt.gst.library.base.model.GTData;
 import cattt.gst.library.base.model.GlobalThemeable;
 import cattt.gst.library.base.model.MatchViewData;
-import cattt.gst.library.base.model.emdata.ViewType;
+import cattt.gst.library.base.model.emdata.MatchType;
 import cattt.gst.library.utils.bitmap.File2Bitmap;
 import cattt.gst.library.utils.logger.Log;
 
@@ -42,12 +42,12 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
         mMatchingViewRunnable = new MatchingViewRunnable(this, fragment);
     }
 
-    public void register(){
+    public void register() {
         GlobalThemeMonitor.get().addOnGlobalThemeListener(this);
     }
 
 
-    public void unregister(){
+    public void unregister() {
         GlobalThemeMonitor.get().removeOnGlobalThemeListener(this);
     }
 
@@ -131,7 +131,6 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
         }
     }
 
-
     private static class MatchingViewRunnable implements Runnable {
         private GlobalThemeable source;
         private BaseSwitchThemeActivity activity;
@@ -166,12 +165,12 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                 if (view == null) {
                     continue;
                 }
+
                 for (GTData mGTData : datas) {
                     switch (mGTData.getType()) {
-                        case ViewType.TYPE_BACKGROUND_DRAWABLE:
+                        case MatchType.TYPE_BACKGROUND_DRAWABLE:
                             try {
-                                Bitmap bitmap =  File2Bitmap.decodeFile(mGTData.getContent(), view);
-
+                                Bitmap bitmap = File2Bitmap.decodeFile(mGTData.getContent(), view);
                                 if (activity != null) {
                                     activity.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_DRAWABLE, new MatchViewData(id, new BitmapDrawable(activity.getApplicationContext().getResources(), bitmap))).sendToTarget();
                                 }
@@ -182,7 +181,7 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                                 ex.printStackTrace();
                             }
                             break;
-                        case ViewType.TYPE_BACKGROUND_COLOR:
+                        case MatchType.TYPE_BACKGROUND_COLOR:
                             try {
                                 if (activity != null) {
                                     activity.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
@@ -194,9 +193,9 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                                 ex.printStackTrace();
                             }
                             break;
-                        case ViewType.TYPE_IMAGE_DRAWABLE:
+                        case MatchType.TYPE_IMAGE_DRAWABLE:
                             try {
-                                Bitmap bitmap =  File2Bitmap.decodeFile(mGTData.getContent(), view);
+                                Bitmap bitmap = File2Bitmap.decodeFile(mGTData.getContent(), view);
                                 if (activity != null) {
                                     activity.getMatchingViewHandler().obtainMessage(MSG_CODE_IMAGE_DRAWABLE, new MatchViewData(id, new BitmapDrawable(activity.getApplicationContext().getResources(), bitmap))).sendToTarget();
                                 }
@@ -207,7 +206,7 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                                 ex.printStackTrace();
                             }
                             break;
-                        case ViewType.TYPE_TEXT_COLOR:
+                        case MatchType.TYPE_TEXT_COLOR:
                             try {
                                 if (activity != null) {
                                     activity.getMatchingViewHandler().obtainMessage(MSG_CODE_TEXT_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
@@ -219,7 +218,7 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                                 ex.printStackTrace();
                             }
                             break;
-                        case ViewType.TYPE_HINT_COLOR:
+                        case MatchType.TYPE_HINT_COLOR:
                             try {
                                 if (activity != null) {
                                     activity.getMatchingViewHandler().obtainMessage(MSG_CODE_HINT_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();

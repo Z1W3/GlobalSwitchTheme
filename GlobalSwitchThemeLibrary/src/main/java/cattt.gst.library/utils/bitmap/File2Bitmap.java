@@ -1,8 +1,10 @@
 package cattt.gst.library.utils.bitmap;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import java.io.File;
@@ -113,17 +115,17 @@ public class File2Bitmap {
      */
     private static int computeScale(BitmapFactory.Options options, View view) {
         int scaleSize = 1;
-        int measuredWidth = view.getMeasuredWidth();
-        int measuredHeight = view.getMeasuredHeight();
-        logger.e("measuredWidth = %d , measuredHeight = %d", measuredWidth, measuredHeight);
-        if (measuredWidth == 0 || measuredHeight == 0) {
-            return scaleSize;
-        }
+        int width = view.getWidth();
+        int height = view.getHeight();
+        DisplayMetrics dm = view.getResources().getDisplayMetrics();
+        width = width == 0 ? dm.widthPixels : width;
+        height = height == 0 ? dm.heightPixels : height;
+        logger.e("measuredWidth = %d , measuredHeight = %d", width, height);
 
-        if (options.outWidth > measuredWidth
-                || options.outHeight > measuredHeight) {
-            int widthScale = Math.round((float) options.outWidth / (float) measuredWidth);
-            int heightScale = Math.round((float) options.outHeight / (float) measuredHeight);
+        if (options.outWidth > width
+                || options.outHeight > height) {
+            int widthScale = Math.round((float) options.outWidth / (float) width);
+            int heightScale = Math.round((float) options.outHeight / (float) height);
             if (widthScale >= heightScale) {
                 scaleSize = widthScale;
             } else {

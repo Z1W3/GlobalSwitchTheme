@@ -1,10 +1,6 @@
 package cattt.gst.library.base.model;
 
-import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
 import android.util.ArrayMap;
-import android.view.View;
-
 import java.util.Vector;
 
 public interface GlobalThemeable {

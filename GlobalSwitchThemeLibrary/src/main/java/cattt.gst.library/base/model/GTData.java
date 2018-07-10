@@ -3,15 +3,15 @@ package cattt.gst.library.base.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import cattt.gst.library.base.model.em.ViewLoadingType;
+import cattt.gst.library.base.model.em.MatchViewType;
 
 public class GTData implements Parcelable {
 
-    @ViewLoadingType
+    @MatchViewType
     private int type;
     private String content;
 
-    public GTData(@ViewLoadingType int type, String content){
+    public GTData(@MatchViewType int type, String content){
         this.type = type;
         this.content = content;
     }
@@ -25,7 +25,7 @@ public class GTData implements Parcelable {
         return type;
     }
 
-    public void setType(@ViewLoadingType int type) {
+    public void setType(@MatchViewType int type) {
         this.type = type;
     }
 

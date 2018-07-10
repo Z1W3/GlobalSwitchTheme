@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.View;
 
-public interface LoadingView {
+public interface MatchView {
 
     void setTextColorByInstanceofView(int resId, @ColorInt int color);
     void setTextHintColorByInstanceofView(int resId, @ColorInt int color);

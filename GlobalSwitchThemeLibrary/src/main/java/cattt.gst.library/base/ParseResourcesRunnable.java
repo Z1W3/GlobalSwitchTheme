@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import cattt.gst.library.base.model.GTData;
-import cattt.gst.library.base.model.emdata.ViewType;
+import cattt.gst.library.base.model.emdata.MatchType;
 
 
 public class ParseResourcesRunnable implements Runnable {
@@ -56,7 +56,7 @@ public class ParseResourcesRunnable implements Runnable {
                 Vector<GTData> mVector = getVector(name, map);
                 //FOLDER.get(0) = "background"
                 //FOLDER.get(1) = "image"
-                int type = FOLDER.get(0).equalsIgnoreCase(parentFolderName) ? ViewType.TYPE_BACKGROUND_DRAWABLE : ViewType.TYPE_IMAGE_DRAWABLE;
+                int type = FOLDER.get(0).equalsIgnoreCase(parentFolderName) ? MatchType.TYPE_BACKGROUND_DRAWABLE : MatchType.TYPE_IMAGE_DRAWABLE;
                 mVector.add(new GTData(type, path));
                 map.put(name, mVector);
             }
@@ -117,8 +117,8 @@ public class ParseResourcesRunnable implements Runnable {
                             // TYPE_COLOR.get(1) = "text",
                             // TYPE_COLOR.get(2) = "hint"
                             int type = TYPE_COLOR.get(0).equalsIgnoreCase(typeAttr) ?
-                                    ViewType.TYPE_BACKGROUND_COLOR : TYPE_COLOR.get(1).equalsIgnoreCase(typeAttr) ?
-                                    ViewType.TYPE_TEXT_COLOR : ViewType.TYPE_HINT_COLOR;
+                                    MatchType.TYPE_BACKGROUND_COLOR : TYPE_COLOR.get(1).equalsIgnoreCase(typeAttr) ?
+                                    MatchType.TYPE_TEXT_COLOR : MatchType.TYPE_HINT_COLOR;
                             mVector.add(new GTData(type, parser.nextText()));
                             map.put(name, mVector);
                         }

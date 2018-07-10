@@ -16,12 +16,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cattt.gst.library.base.model.LoadingView;
+import cattt.gst.library.base.model.MatchView;
 import cattt.gst.library.base.model.em.IWindowFocusState;
 import cattt.gst.library.base.model.emdata.WindowFocusState;
 
-abstract public class BaseSwitchThemeFragment extends BaseFragment implements LoadingView {
-    private MatchingViewHandler handler = new MatchingViewHandler(this);
+abstract public class BaseSwitchThemeFragment extends BaseFragment implements MatchView {
+    private MatchViewHandler handler = new MatchViewHandler(this);
     private GlobalThemeWorker mWorker = new GlobalThemeWorker(this);
 
     @IWindowFocusState
