@@ -48,7 +48,7 @@ public class MainActivity extends BaseSwitchThemeActivity {
 
     @Override
     protected int[] getViewResourcesPendingChangeTheme() {
-        return new int[]{R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
+        return new int[]{R.id.wallpaper2, R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
     }
 
     @Override
