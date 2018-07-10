@@ -9,10 +9,10 @@
 2.图片的命名需要与R.id.xxx的 "xxx"保持一致<br>
 3.color的name命名需要与R.id.xxx的 "xxx"保持一致<br>
 
-<img width="500" height="200" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d1.png" /><br>
-<img width="500" height="200" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d2.png" /><br>
-<img width="500" height="200" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d3.png" /><br>
-<img width="500" height="500" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d4.png" /><br>
+<img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d1.png" /><br>
+<img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d2.png" /><br>
+<img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d3.png" /><br>
+<img width="400" height="350" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d4.png" /><br>
 
 ### 实现
 你的Activity需要继承BaseSwitchThemeActivity,通过添加View id匹配相应的image/color
@@ -27,7 +27,7 @@
   }
 ```
 
-####开启解析资源
+#### 开启解析资源
 ParseResourcesRunnable 为解析类，需要在子线程中执行
 
 ```java
