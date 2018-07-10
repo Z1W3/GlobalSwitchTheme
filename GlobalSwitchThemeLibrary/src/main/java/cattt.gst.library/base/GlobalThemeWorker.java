@@ -27,7 +27,6 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
     public static final int MSG_CODE_IMAGE_DRAWABLE = 10002;
     public static final int MSG_CODE_TEXT_COLOR = 10003;
     public static final int MSG_CODE_HINT_COLOR = 10004;
-    public static final int MSG_CODE_MATCH_VIEW_VISIBILITY = 10005;
 
     private MatchingViewRunnable mMatchingViewRunnable;
     private BaseSwitchThemeActivity activity;
@@ -126,12 +125,6 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
 
     @Override
     public void performSwitchThemeByAsync() {
-        if (activity != null) {
-            activity.getMatchingViewHandler().obtainMessage(MSG_CODE_MATCH_VIEW_VISIBILITY, View.INVISIBLE).sendToTarget();
-        }
-        if (fragment != null) {
-            fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_MATCH_VIEW_VISIBILITY, View.INVISIBLE).sendToTarget();
-        }
         mExecutorService.execute(mMatchingViewRunnable);
     }
 

@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
-import cattt.gst.library.base.BaseAppCompatActivity;
+import cattt.gst.library.base.BaseSwitchThemeActivity;
 
-public class ThirdActivity extends BaseAppCompatActivity {
+public class ThirdActivity extends BaseSwitchThemeActivity {
     @Override
     protected int getContentViewLayoutID() {
         return R.layout.activity_third;
@@ -19,7 +19,13 @@ public class ThirdActivity extends BaseAppCompatActivity {
     private ViewPager mViewPager;
 
     @Override
+    protected int[] getViewResourcesPendingChangeTheme() {
+        return new int[]{R.id.toolbar_title};
+    }
+
+    @Override
     protected void onInitView(Bundle savedInstanceState) {
+        super.onInitView(savedInstanceState);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_title));
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

@@ -10,19 +10,19 @@
     tools:showIn="@layout/activity_main">
 
     <Button
-        android:id="@+id/firstBtn"
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="跳转至第一个页面" />
 
     <Button
-        android:id="@+id/secondBtn"
+        android:id="@+id/app_compat_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="跳转至第二个页面" />
 
     <Button
-        android:id="@+id/thirdBtn"
+        android:id="@+id/app_compat_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="跳转至第三个页面" />

@@ -21,14 +21,14 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.concurrent.Executors;
 
-import cattt.gst.library.base.BaseAppCompatActivity;
+import cattt.gst.library.base.BaseSwitchThemeActivity;
 import cattt.gst.library.base.ParseResourcesRunnable;
 import cattt.gst.library.utils.toast.ToastUtils;
 import cattt.gst.library.utils.zip.ZipArchive;
 import cattt.gst.library.utils.zip.callback.OnUnzipListener;
 import cattt.theme.toggle.permission.PermissionManager;
 
-public class MainActivity extends BaseAppCompatActivity {
+public class MainActivity extends BaseSwitchThemeActivity {
 
     private DownloadUtils mDownloadUtils;
     private File resourcesZipFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/resources.zip");
@@ -47,13 +47,19 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     @Override
+    protected int[] getViewResourcesPendingChangeTheme() {
+        return new int[]{R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
+    }
+
+    @Override
     protected void onInitView(Bundle savedInstanceState) {
+        super.onInitView(savedInstanceState);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_title));
         mDownloadUtils = new DownloadUtils(getApplicationContext());
         mDownloadUtils.registerReceiver(receiver);
         outDir = new File(getApplicationContext().getFilesDir().getAbsolutePath());
         mPermissionManager = new PermissionManager(this, PERMISSIONS);
-        findViewById(R.id.firstBtn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), FirstActivity.class);
@@ -61,7 +67,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 startActivity(intent);
             }
         });
-        findViewById(R.id.secondBtn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.app_compat_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
@@ -69,7 +75,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 startActivity(intent);
             }
         });
-        findViewById(R.id.thirdBtn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.app_compat_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ThirdActivity.class);
@@ -83,9 +89,9 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onBeforeDestroy() {
+        super.onBeforeDestroy();
         mDownloadUtils.unregisterReceiver(receiver);
-        super.onDestroy();
     }
 
     @Override

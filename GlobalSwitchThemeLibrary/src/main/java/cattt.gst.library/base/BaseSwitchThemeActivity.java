@@ -51,13 +51,11 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
     @Override
     public void setBackground(View view, BitmapDrawable drawable) {
         view.setBackground(drawable);
-        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
     public void setBackgroundColor(View view, @ColorInt int color) {
         view.setBackgroundColor(color);
-        setViewVisible(view, View.VISIBLE, 0);
     }
 
 
@@ -68,7 +66,6 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
         } else if (view instanceof AppCompatEditText) {
             ((AppCompatEditText) view).setHintTextColor(color);
         }
-        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
@@ -88,7 +85,6 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
         } else if (view instanceof Toolbar) {
             ((Toolbar) view).setTitleTextColor(color);
         }
-        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
@@ -101,17 +97,6 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
             ((AppCompatImageView) view).setImageDrawable(drawable);
         } else if (view instanceof AppCompatImageButton) {
             ((AppCompatImageButton) view).setImageDrawable(drawable);
-        }
-        setViewVisible(view, View.VISIBLE, 0);
-    }
-
-    @Override
-    public void setMatchViewVisibility(int visibility) {
-        if(Looper.getMainLooper() != Looper.myLooper()){
-            throw new IllegalThreadStateException("Must running in the main thread.");
-        }
-        for(int resId : getViewResourcesPendingChangeTheme()){
-            findViewById(resId).setVisibility(visibility);
         }
     }
 

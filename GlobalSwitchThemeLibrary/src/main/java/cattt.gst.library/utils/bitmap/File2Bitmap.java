@@ -54,7 +54,6 @@ public class File2Bitmap {
     }
 
     public static Bitmap decodeFile(String filePath, View view) throws IOException {
-        logger.e("$$$$$$$$$    start time = %d, ThreadID = %d", System.currentTimeMillis(), Thread.currentThread().getId());
         Bitmap b;
         File f = new File(filePath);
         if (f == null) {
@@ -80,14 +79,12 @@ public class File2Bitmap {
         try {
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             int scale = computeScale(o, view);
-            logger.e("decodeFile() -> scale = %d, ThreadID = %d" ,scale, Thread.currentThread().getId());
             o2.inSampleSize = scale;
             fis = new FileInputStream(f);
             b = BitmapFactory.decodeStream(fis, null, o2);
         } finally {
             fis.close();
         }
-        logger.e("$$$$$$$$$    end time = %d, ThreadID = %d", System.currentTimeMillis(), Thread.currentThread().getId());
         return b;
     }
 
@@ -98,7 +95,9 @@ public class File2Bitmap {
         int scaleSize = 1;
         int width = view.getWidth();
         int height = view.getHeight();
-        while (!ViewCompat.isLaidOut(view)) {
+        boolean result = false;
+        while (!result) {
+            result = ViewCompat.isLaidOut(view);
             width = view.getWidth();
             height = view.getHeight();
             try {

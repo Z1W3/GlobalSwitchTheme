@@ -18,6 +18,4 @@
         android:title="解压并切换主题"
         android:titleCondensed="切换主题"
         app:showAsAction="ifRoom" />
-
-
 </menu>
