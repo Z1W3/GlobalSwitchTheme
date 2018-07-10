@@ -2,6 +2,7 @@ package cattt.gst.library.base;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -42,28 +43,29 @@ abstract public class BaseSwitchThemeFragment extends BaseFragment implements Ma
     }
 
     @Override
-    public void setBackground(int resId, BitmapDrawable drawable) {
-        getView().findViewById(resId).setBackground(drawable);
+    public void setBackground(View view, BitmapDrawable drawable) {
+        view.setBackground(drawable);
+        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
-    public void setBackgroundColor(int resId, @ColorInt int color) {
-        getView().findViewById(resId).setBackgroundColor(color);
+    public void setBackgroundColor(View view, @ColorInt int color) {
+        view.setBackgroundColor(color);
+        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
-    public void setTextHintColorByInstanceofView(int resId, int color) {
-        View view = getView().findViewById(resId);
+    public void setTextHintColorByInstanceofView(View view, int color) {
         if (view instanceof EditText) {
             ((EditText) view).setHintTextColor(color);
         } else if (view instanceof AppCompatEditText) {
             ((AppCompatEditText) view).setHintTextColor(color);
         }
+        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
-    public void setTextColorByInstanceofView(int resId, int color) {
-        View view = getView().findViewById(resId);
+    public void setTextColorByInstanceofView(View view, int color) {
         if (view instanceof TextView) {
             ((TextView) view).setTextColor(color);
         } else if (view instanceof EditText) {
@@ -79,11 +81,11 @@ abstract public class BaseSwitchThemeFragment extends BaseFragment implements Ma
         } else if (view instanceof Toolbar) {
             ((Toolbar) view).setTitleTextColor(color);
         }
+        setViewVisible(view, View.VISIBLE, 0);
     }
 
     @Override
-    public void setImageByInstanceofView(int resId, BitmapDrawable drawable) {
-        View view = getView().findViewById(resId);
+    public void setImageByInstanceofView(View view, BitmapDrawable drawable) {
         if (view instanceof ImageView) {
             ((ImageView) view).setImageDrawable(drawable);
         } else if (view instanceof ImageButton) {
@@ -92,6 +94,17 @@ abstract public class BaseSwitchThemeFragment extends BaseFragment implements Ma
             ((AppCompatImageView) view).setImageDrawable(drawable);
         } else if (view instanceof AppCompatImageButton) {
             ((AppCompatImageButton) view).setImageDrawable(drawable);
+        }
+        setViewVisible(view, View.VISIBLE, 0);
+    }
+
+    @Override
+    public void setMatchViewVisibility(int visibility) {
+        if (Looper.getMainLooper() != Looper.myLooper()) {
+            throw new IllegalThreadStateException("Must running in the main thread.");
+        }
+        for (int resId : getViewResourcesPendingChangeTheme()) {
+            getView().findViewById(resId).setVisibility(visibility);
         }
     }
 

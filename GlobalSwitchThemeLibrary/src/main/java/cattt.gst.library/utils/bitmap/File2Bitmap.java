@@ -1,10 +1,9 @@
 package cattt.gst.library.utils.bitmap;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.util.DisplayMetrics;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import java.io.File;
@@ -56,6 +55,7 @@ public class File2Bitmap {
     }
 
     public static Bitmap decodeFile(String filePath, View view) throws IOException {
+        logger.e("$$$$$$$$$    start time = %d, ThreadID = %d", System.currentTimeMillis(), Thread.currentThread().getId());
         Bitmap b;
         File f = new File(filePath);
         if (f == null) {
@@ -69,19 +69,26 @@ public class File2Bitmap {
         o.inPreferredConfig = Bitmap.Config.RGB_565;
 
         FileInputStream fis = new FileInputStream(f);
-        //矩阵
-        Rect rect = new Rect();
-        BitmapFactory.decodeStream(fis, rect, o);
-        fis.close();
+        try {
+            //矩阵
+            Rect rect = new Rect();
+            BitmapFactory.decodeStream(fis, rect, o);
+        } finally {
+            fis.close();
+        }
 
         //Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        int scale = computeScale(o, view);
-        logger.e("decodeFile() -> scale = " + scale);
-        o2.inSampleSize = scale;
-        fis = new FileInputStream(f);
-        b = BitmapFactory.decodeStream(fis, null, o2);
-        fis.close();
+        try {
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            int scale = computeScale(o, view);
+            logger.e("decodeFile() -> scale = %d, ThreadID = %d" ,scale, Thread.currentThread().getId());
+            o2.inSampleSize = scale;
+            fis = new FileInputStream(f);
+            b = BitmapFactory.decodeStream(fis, null, o2);
+        } finally {
+            fis.close();
+        }
+        logger.e("$$$$$$$$$    end time = %d, ThreadID = %d", System.currentTimeMillis(), Thread.currentThread().getId());
         return b;
     }
 
@@ -117,11 +124,18 @@ public class File2Bitmap {
         int scaleSize = 1;
         int width = view.getWidth();
         int height = view.getHeight();
-        DisplayMetrics dm = view.getResources().getDisplayMetrics();
-        width = width == 0 ? dm.widthPixels : width;
-        height = height == 0 ? dm.heightPixels : height;
-        logger.e("measuredWidth = %d , measuredHeight = %d", width, height);
-
+        boolean result = false;
+        while (!result) {
+            result = ViewCompat.isLaidOut(view);
+            logger.e("####  ThreadID = %d, result = %b", Thread.currentThread().getId(), result);
+            width = view.getWidth();
+            height = view.getHeight();
+            try {
+                Thread.sleep(30L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         if (options.outWidth > width
                 || options.outHeight > height) {
             int widthScale = Math.round((float) options.outWidth / (float) width);

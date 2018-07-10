@@ -1,13 +1,14 @@
 package cattt.gst.library.base;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.util.ArrayMap;
 import android.view.View;
 
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cattt.gst.library.base.callback.OnGlobalThemeListener;
@@ -26,13 +27,16 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
     public static final int MSG_CODE_IMAGE_DRAWABLE = 10002;
     public static final int MSG_CODE_TEXT_COLOR = 10003;
     public static final int MSG_CODE_HINT_COLOR = 10004;
+    public static final int MSG_CODE_MATCH_VIEW_VISIBILITY = 10005;
 
     private MatchingViewRunnable mMatchingViewRunnable;
     private BaseSwitchThemeActivity activity;
+    private ExecutorService mExecutorService;
 
     protected GlobalThemeWorker(BaseSwitchThemeActivity activity) {
         this.activity = activity;
         mMatchingViewRunnable = new MatchingViewRunnable(this, activity);
+        mExecutorService = Executors.newSingleThreadExecutor();
     }
 
     private BaseSwitchThemeFragment fragment;
@@ -40,6 +44,7 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
     protected GlobalThemeWorker(BaseSwitchThemeFragment fragment) {
         this.fragment = fragment;
         mMatchingViewRunnable = new MatchingViewRunnable(this, fragment);
+        mExecutorService = Executors.newSingleThreadExecutor();
     }
 
     public void register() {
@@ -121,7 +126,13 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
 
     @Override
     public void performSwitchThemeByAsync() {
-        Executors.newFixedThreadPool(3).execute(mMatchingViewRunnable);
+        if (activity != null) {
+            activity.getMatchingViewHandler().obtainMessage(MSG_CODE_MATCH_VIEW_VISIBILITY, View.INVISIBLE).sendToTarget();
+        }
+        if (fragment != null) {
+            fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_MATCH_VIEW_VISIBILITY, View.INVISIBLE).sendToTarget();
+        }
+        mExecutorService.execute(mMatchingViewRunnable);
     }
 
     @Override
@@ -134,10 +145,12 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
     private static class MatchingViewRunnable implements Runnable {
         private GlobalThemeable source;
         private BaseSwitchThemeActivity activity;
+        private ExecutorService mExecutorService;
 
         public MatchingViewRunnable(GlobalThemeable source, BaseSwitchThemeActivity activity) {
             this.source = source;
             this.activity = activity;
+            mExecutorService = Executors.newCachedThreadPool();
         }
 
         private BaseSwitchThemeFragment fragment;
@@ -145,6 +158,7 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
         public MatchingViewRunnable(GlobalThemeable source, BaseSwitchThemeFragment fragment) {
             this.source = source;
             this.fragment = fragment;
+            mExecutorService = Executors.newCachedThreadPool();
         }
 
         @Override
@@ -165,54 +179,43 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                 if (view == null) {
                     continue;
                 }
-
-                for (GTData mGTData : datas) {
+                for (final GTData mGTData : datas) {
                     switch (mGTData.getType()) {
                         case MatchType.TYPE_BACKGROUND_DRAWABLE:
-                            try {
-                                Bitmap bitmap = File2Bitmap.decodeFile(mGTData.getContent(), view);
-                                if (activity != null) {
-                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_DRAWABLE, new MatchViewData(id, new BitmapDrawable(activity.getApplicationContext().getResources(), bitmap))).sendToTarget();
-                                }
-                                if (fragment != null) {
-                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_DRAWABLE, new MatchViewData(id, new BitmapDrawable(fragment.getContext().getApplicationContext().getResources(), bitmap))).sendToTarget();
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
+                            if (activity != null) {
+                                mExecutorService.execute(new DrawableRunnable(mGTData.getContent(), view, activity.getMatchingViewHandler(), MSG_CODE_BACKGROUND_DRAWABLE));
+                            }
+                            if (fragment != null) {
+                                mExecutorService.execute(new DrawableRunnable(mGTData.getContent(), view, fragment.getMatchingViewHandler(), MSG_CODE_BACKGROUND_DRAWABLE));
                             }
                             break;
                         case MatchType.TYPE_BACKGROUND_COLOR:
                             try {
                                 if (activity != null) {
-                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
+                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_COLOR, new MatchViewData(view, Color.parseColor(mGTData.getContent()))).sendToTarget();
                                 }
                                 if (fragment != null) {
-                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
+                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_BACKGROUND_COLOR, new MatchViewData(view, Color.parseColor(mGTData.getContent()))).sendToTarget();
                                 }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             break;
                         case MatchType.TYPE_IMAGE_DRAWABLE:
-                            try {
-                                Bitmap bitmap = File2Bitmap.decodeFile(mGTData.getContent(), view);
-                                if (activity != null) {
-                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_IMAGE_DRAWABLE, new MatchViewData(id, new BitmapDrawable(activity.getApplicationContext().getResources(), bitmap))).sendToTarget();
-                                }
-                                if (fragment != null) {
-                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_IMAGE_DRAWABLE, new MatchViewData(id, new BitmapDrawable(fragment.getContext().getApplicationContext().getResources(), bitmap))).sendToTarget();
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
+                            if (activity != null) {
+                                mExecutorService.execute(new DrawableRunnable(mGTData.getContent(), view, activity.getMatchingViewHandler(), MSG_CODE_IMAGE_DRAWABLE));
+                            }
+                            if (fragment != null) {
+                                mExecutorService.execute(new DrawableRunnable(mGTData.getContent(), view, fragment.getMatchingViewHandler(), MSG_CODE_IMAGE_DRAWABLE));
                             }
                             break;
                         case MatchType.TYPE_TEXT_COLOR:
                             try {
                                 if (activity != null) {
-                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_TEXT_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
+                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_TEXT_COLOR, new MatchViewData(view, Color.parseColor(mGTData.getContent()))).sendToTarget();
                                 }
                                 if (fragment != null) {
-                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_TEXT_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
+                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_TEXT_COLOR, new MatchViewData(view, Color.parseColor(mGTData.getContent()))).sendToTarget();
                                 }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
@@ -221,16 +224,39 @@ public class GlobalThemeWorker implements GlobalThemeable, OnGlobalThemeListener
                         case MatchType.TYPE_HINT_COLOR:
                             try {
                                 if (activity != null) {
-                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_HINT_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
+                                    activity.getMatchingViewHandler().obtainMessage(MSG_CODE_HINT_COLOR, new MatchViewData(view, Color.parseColor(mGTData.getContent()))).sendToTarget();
                                 }
                                 if (fragment != null) {
-                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_HINT_COLOR, new MatchViewData(id, Color.parseColor(mGTData.getContent()))).sendToTarget();
+                                    fragment.getMatchingViewHandler().obtainMessage(MSG_CODE_HINT_COLOR, new MatchViewData(view, Color.parseColor(mGTData.getContent()))).sendToTarget();
                                 }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             break;
                     }
+                }
+            }
+        }
+
+        private static class DrawableRunnable implements Runnable {
+            private String filePath;
+            private View view;
+            private Handler handler;
+            private int what;
+
+            private DrawableRunnable(String filePath, View view, Handler handler, int what) {
+                this.filePath = filePath;
+                this.view = view;
+                this.handler = handler;
+                this.what = what;
+            }
+
+            @Override
+            public void run() {
+                try {
+                    handler.obtainMessage(what, new MatchViewData(view, new BitmapDrawable(view.getResources(), File2Bitmap.decodeFile(filePath, view)))).sendToTarget();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         }

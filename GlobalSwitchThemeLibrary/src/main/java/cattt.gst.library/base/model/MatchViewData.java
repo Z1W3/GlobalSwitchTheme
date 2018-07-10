@@ -3,27 +3,27 @@ package cattt.gst.library.base.model;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 
-public class MatchViewData{
-    private int resId;
+public class MatchViewData {
+    private View view;
     private int color;
     private BitmapDrawable drawable;
 
-    public MatchViewData(int resId, int color){
-        this.resId = resId;
+    public MatchViewData(View view, int color) {
+        this.view = view;
         this.color = color;
     }
 
-    public MatchViewData(int resId, BitmapDrawable drawable){
-        this.resId = resId;
+    public MatchViewData(View view, BitmapDrawable drawable) {
+        this.view = view;
         this.drawable = drawable;
     }
 
-    public int getResId() {
-        return resId;
+    public View getView() {
+        return view;
     }
 
-    public void setResId(int resId) {
-        this.resId = resId;
+    public void setView(View view) {
+        this.view = view;
     }
 
     public int getColor() {
