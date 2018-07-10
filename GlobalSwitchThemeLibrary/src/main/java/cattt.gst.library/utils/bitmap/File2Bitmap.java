@@ -16,7 +16,6 @@ public class File2Bitmap {
     private static Log logger = Log.getLogger(File2Bitmap.class);
 
     /**
-     * @see #decodeFile(File, View)
      * @deprecated
      */
     public static Bitmap decodeFile(String filePath) throws IOException {
@@ -92,31 +91,6 @@ public class File2Bitmap {
         return b;
     }
 
-    public static Bitmap decodeFile(File file, View view) throws IOException {
-        Bitmap b;
-        //Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        //设置为true,表示解析Bitmap对象，该对象不占内存
-        o.inJustDecodeBounds = true;
-        //首先，如果对图片质量要求不高，可以设置图片的压缩格式为RGB_565
-        o.inPreferredConfig = Bitmap.Config.RGB_565;
-
-        FileInputStream fis = new FileInputStream(file);
-        //矩阵
-        Rect rect = new Rect();
-        BitmapFactory.decodeStream(fis, rect, o);
-        fis.close();
-
-        //Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = computeScale(o, view);
-        fis = new FileInputStream(file);
-        b = BitmapFactory.decodeStream(fis, null, o2);
-        fis.close();
-        return b;
-    }
-
-
     /**
      * Calculate zoom ratio
      */
@@ -124,10 +98,7 @@ public class File2Bitmap {
         int scaleSize = 1;
         int width = view.getWidth();
         int height = view.getHeight();
-        boolean result = false;
-        while (!result) {
-            result = ViewCompat.isLaidOut(view);
-            logger.e("####  ThreadID = %d, result = %b", Thread.currentThread().getId(), result);
+        while (!ViewCompat.isLaidOut(view)) {
             width = view.getWidth();
             height = view.getHeight();
             try {
