@@ -6,7 +6,7 @@ import android.support.annotation.ColorInt;
 import android.view.View;
 
 
-public interface MatchView {
+public interface IMatchViewable {
     void setTextColorByInstanceofView(View view, @ColorInt int color);
     void setTextHintColorByInstanceofView(View view, @ColorInt int color);
     void setBackground(View view, BitmapDrawable drawable);

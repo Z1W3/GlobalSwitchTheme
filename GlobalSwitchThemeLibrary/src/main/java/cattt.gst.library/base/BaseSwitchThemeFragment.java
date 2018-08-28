@@ -2,7 +2,6 @@ package cattt.gst.library.base;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -17,11 +16,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cattt.gst.library.base.model.MatchView;
+import cattt.gst.library.base.model.IMatchViewable;
 import cattt.gst.library.base.model.em.IWindowFocusState;
 import cattt.gst.library.base.model.emdata.WindowFocusState;
 
-abstract public class BaseSwitchThemeFragment extends BaseFragment implements MatchView {
+abstract public class BaseSwitchThemeFragment extends BaseFragment implements IMatchViewable {
     private MatchViewHandler handler = new MatchViewHandler(this);
     private GlobalThemeWorker mWorker = new GlobalThemeWorker(this);
 

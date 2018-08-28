@@ -3,16 +3,16 @@ package cattt.gst.library.base;
 import android.os.Handler;
 import android.os.Message;
 
-import cattt.gst.library.base.model.MatchView;
+import cattt.gst.library.base.model.IMatchViewable;
 import cattt.gst.library.base.model.MatchViewData;
 import cattt.gst.library.utils.logger.Log;
 
 
 public class MatchViewHandler extends Handler {
     private static Log logger = Log.getLogger(MatchViewHandler.class);
-    private MatchView root;
+    private IMatchViewable root;
 
-    protected MatchViewHandler(MatchView root) {
+    protected MatchViewHandler(IMatchViewable root) {
         this.root = root;
     }
 

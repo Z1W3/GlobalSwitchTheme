@@ -3,7 +3,6 @@ package cattt.gst.library.base;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -11,6 +10,7 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,12 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import cattt.gst.library.base.model.MatchView;
+import cattt.gst.library.base.model.IMatchViewable;
 import cattt.gst.library.base.model.em.IWindowFocusState;
 import cattt.gst.library.base.model.emdata.WindowFocusState;
 import cattt.gst.library.utils.logger.Log;
 
-abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity implements MatchView {
+abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity implements View.OnTouchListener, IMatchViewable {
     private static Log logger = Log.getLogger(BaseSwitchThemeActivity.class);
     private MatchViewHandler handler = new MatchViewHandler(this);
     private GlobalThemeWorker mWorker = new GlobalThemeWorker(this);
@@ -32,6 +32,11 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
     @IWindowFocusState
     private int state = WindowFocusState.STATE_BACK;
 
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
 
     /**
      * 判断是否是前端页面
