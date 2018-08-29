@@ -1,6 +1,7 @@
 package cattt.gst.library.base;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import java.util.Vector;
@@ -8,52 +9,66 @@ import java.util.Vector;
 import cattt.gst.library.base.callback.OnGlobalThemeListener;
 
 public class GlobalThemeMonitor {
-    private static final int MSG_CODE_SWITCH = 10000;
-
     private Vector<OnGlobalThemeListener> mListeners = new Vector<>();
 
-    private MainHandler handler = new MainHandler(this);
+    private MainHandler mHandler = new MainHandler(this);
 
     protected GlobalThemeMonitor() {
     }
 
-    protected void addOnGlobalThemeListener(OnGlobalThemeListener listener) {
-        if (listener != null) {
-            mListeners.add(listener);
+    protected void addOnGlobalThemeListener(final OnGlobalThemeListener listener) {
+        if (listener == null) {
+            return;
         }
+        obtainMessageOfHandler(MainHandler.MSG_CODE_ADD_LISTENER, listener);
     }
 
-    protected void removeOnGlobalThemeListener(OnGlobalThemeListener listener) {
-        if (listener != null) {
-            mListeners.remove(listener);
+    protected void removeOnGlobalThemeListener(final OnGlobalThemeListener listener) {
+        if (listener == null) {
+            return;
         }
+        obtainMessageOfHandler(MainHandler.MSG_CODE_REMOVE_LISTENER, listener);
     }
 
     protected void onSwitchResourcesOfMessage() {
-        handler.obtainMessage(MSG_CODE_SWITCH).sendToTarget();
+        obtainMessageOfHandler(MainHandler.MSG_CODE_SWITCH, null);
     }
 
-
     private void onSwitchResources() {
-        if (mListeners != null) {
-            for (OnGlobalThemeListener listener : mListeners) {
-                listener.onSwitchResources();
-            }
+        if (mListeners == null) {
+            return;
+        }
+        for (OnGlobalThemeListener listener : mListeners) {
+            listener.onSwitchResources();
         }
     }
 
-    private static class MainHandler extends Handler {
-        private GlobalThemeMonitor monitor;
+    private void obtainMessageOfHandler(int what, Object obj) {
+        mHandler.obtainMessage(what, obj).sendToTarget();
+    }
 
-        private MainHandler(GlobalThemeMonitor monitor) {
-            this.monitor = monitor;
+    private static class MainHandler extends Handler {
+        private static final int MSG_CODE_SWITCH = 10000;
+        private static final int MSG_CODE_ADD_LISTENER = 10001;
+        private static final int MSG_CODE_REMOVE_LISTENER = 10002;
+        private GlobalThemeMonitor mRoot;
+
+        private MainHandler(GlobalThemeMonitor root) {
+            super(Looper.getMainLooper());
+            this.mRoot = root;
         }
 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_CODE_SWITCH:
-                    monitor.onSwitchResources();
+                    mRoot.onSwitchResources();
+                    break;
+                case MSG_CODE_ADD_LISTENER:
+                    mRoot.mListeners.add((OnGlobalThemeListener) msg.obj);
+                    break;
+                case MSG_CODE_REMOVE_LISTENER:
+                    mRoot.mListeners.remove(msg.obj);
                     break;
             }
 
@@ -64,7 +79,7 @@ public class GlobalThemeMonitor {
         private static final GlobalThemeMonitor INSTANCE = new GlobalThemeMonitor();
     }
 
-    protected static GlobalThemeMonitor get(){
+    protected static GlobalThemeMonitor get() {
         return Helper.INSTANCE;
     }
 }

@@ -1,4 +1,4 @@
-package cattt.gst.library.base.model.emdata;
+package cattt.gst.library.base.model.enums;
 
 public class WindowFocusState {
     public static final int STATE_BACK = 0;

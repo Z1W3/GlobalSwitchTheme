@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import cattt.gst.library.base.model.em.Visibility;
+import cattt.gst.library.base.model.enums.Visibility;
 
 abstract public class BaseAppCompatActivity extends AppCompatActivity {
 

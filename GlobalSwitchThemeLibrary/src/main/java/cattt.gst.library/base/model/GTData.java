@@ -3,15 +3,15 @@ package cattt.gst.library.base.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import cattt.gst.library.base.model.em.MatchViewType;
+import cattt.gst.library.base.model.enums.MatchTypeClub;
 
 public class GTData implements Parcelable {
 
-    @MatchViewType
+    @MatchTypeClub
     private int type;
     private String content;
 
-    public GTData(@MatchViewType int type, String content){
+    public GTData(@MatchTypeClub int type, String content){
         this.type = type;
         this.content = content;
     }
@@ -25,7 +25,7 @@ public class GTData implements Parcelable {
         return type;
     }
 
-    public void setType(@MatchViewType int type) {
+    public void setType(@MatchTypeClub int type) {
         this.type = type;
     }
 

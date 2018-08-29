@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import cattt.gst.library.base.model.GTData;
-import cattt.gst.library.base.model.emdata.MatchType;
+import cattt.gst.library.base.model.enums.MatchType;
 
 
 public class ParseResourcesRunnable implements Runnable {
@@ -46,17 +46,17 @@ public class ParseResourcesRunnable implements Runnable {
 
     @Override
     public void run() {
-        ArrayMap<String, Vector<GTData>> map = new ArrayMap<>();
+        final ArrayMap<String, Vector<GTData>> map = new ArrayMap<>();
         for (String path : getTargetPaths(target)) {
-            String parentPath = new File(path).getParentFile().getAbsolutePath();
-            String parentFolderName = parentPath.substring(parentPath.lastIndexOf("/") + 1);
-            String suffixName = path.substring(path.lastIndexOf("."));
+            final String parentPath = new File(path).getParentFile().getAbsolutePath();
+            final String parentFolderName = parentPath.substring(parentPath.lastIndexOf("/") + 1);
+            final String suffixName = path.substring(path.lastIndexOf("."));
             if (IMAGE_SUFFIX_NAME.contains(suffixName) && FOLDER.contains(parentFolderName)) {
-                String name = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
-                Vector<GTData> mVector = getVector(name, map);
+                final  String name = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
+                final Vector<GTData> mVector = getVector(name, map);
                 //FOLDER.get(0) = "background"
                 //FOLDER.get(1) = "image"
-                int type = FOLDER.get(0).equalsIgnoreCase(parentFolderName) ? MatchType.TYPE_BACKGROUND_DRAWABLE : MatchType.TYPE_IMAGE_DRAWABLE;
+                final int type = FOLDER.get(0).equalsIgnoreCase(parentFolderName) ? MatchType.TYPE_BACKGROUND_DRAWABLE : MatchType.TYPE_IMAGE_DRAWABLE;
                 mVector.add(new GTData(type, path));
                 map.put(name, mVector);
             }
@@ -80,7 +80,7 @@ public class ParseResourcesRunnable implements Runnable {
     }
 
     private String[] getTargetPaths(File target) {
-        Vector<String> vector = new Vector<>();
+        final Vector<String> vector = new Vector<>();
         recursionFetchFiles(target, vector);
         return vector.toArray(new String[vector.size()]);
     }
@@ -88,7 +88,7 @@ public class ParseResourcesRunnable implements Runnable {
     private void recursionFetchFiles(File dir, Vector<String> vector) {
         if (dir.exists()) {
             if (dir.isDirectory()) {
-                File[] files = dir.listFiles();
+                final File[] files = dir.listFiles();
                 for (File file : files) {
                     recursionFetchFiles(file, vector);
                 }
@@ -99,8 +99,8 @@ public class ParseResourcesRunnable implements Runnable {
     }
 
     public ArrayMap<String, Vector<GTData>> xmlParser(InputStream in) throws XmlPullParserException, IOException {
-        ArrayMap<String, Vector<GTData>> map = new ArrayMap<>();
-        XmlPullParser parser = Xml.newPullParser();
+        final ArrayMap<String, Vector<GTData>> map = new ArrayMap<>();
+        final XmlPullParser parser = Xml.newPullParser();
         parser.setInput(in, "utf-8");
         int eventType = parser.getEventType();
         while (XmlPullParser.END_DOCUMENT != eventType) {
@@ -109,14 +109,14 @@ public class ParseResourcesRunnable implements Runnable {
                     break;
                 case XmlPullParser.START_TAG:
                     try {
-                        String name = parser.getAttributeValue(0);
-                        String typeAttr = parser.getAttributeValue(1);
-                        Vector<GTData> mVector = getVector(name, map);
+                        final String name = parser.getAttributeValue(0);
+                        final String typeAttr = parser.getAttributeValue(1);
+                        final Vector<GTData> mVector = getVector(name, map);
                         if (TYPE_COLOR.contains(typeAttr)) {
                             // TYPE_COLOR.get(0) = "background",
                             // TYPE_COLOR.get(1) = "text",
                             // TYPE_COLOR.get(2) = "hint"
-                            int type = TYPE_COLOR.get(0).equalsIgnoreCase(typeAttr) ?
+                            final int type = TYPE_COLOR.get(0).equalsIgnoreCase(typeAttr) ?
                                     MatchType.TYPE_BACKGROUND_COLOR : TYPE_COLOR.get(1).equalsIgnoreCase(typeAttr) ?
                                     MatchType.TYPE_TEXT_COLOR : MatchType.TYPE_HINT_COLOR;
                             mVector.add(new GTData(type, parser.nextText()));

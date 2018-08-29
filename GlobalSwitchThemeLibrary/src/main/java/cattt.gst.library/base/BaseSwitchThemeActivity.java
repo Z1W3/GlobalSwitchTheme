@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 
 import cattt.gst.library.base.model.IMatchViewable;
-import cattt.gst.library.base.model.em.IWindowFocusState;
-import cattt.gst.library.base.model.emdata.WindowFocusState;
+import cattt.gst.library.base.model.enums.WindowFocusStateClub;
+import cattt.gst.library.base.model.enums.WindowFocusState;
 import cattt.gst.library.utils.logger.Log;
 
 abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity implements View.OnTouchListener, IMatchViewable {
@@ -29,7 +29,7 @@ abstract public class BaseSwitchThemeActivity extends BaseAppCompatActivity impl
     private MatchViewHandler handler = new MatchViewHandler(this);
     private GlobalThemeWorker mWorker = new GlobalThemeWorker(this);
 
-    @IWindowFocusState
+    @WindowFocusStateClub
     private int state = WindowFocusState.STATE_BACK;
 
 
