@@ -18,4 +18,12 @@
         android:title="解压并切换主题"
         android:titleCondensed="切换主题"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_test"
+       android:menuCategory="container"
+        android:orderInCategory="103"
+        android:title="测试"
+        android:titleCondensed="测试"
+        app:showAsAction="ifRoom" />
 </menu>

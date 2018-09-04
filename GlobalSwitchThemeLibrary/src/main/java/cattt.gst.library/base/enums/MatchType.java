@@ -1,4 +1,4 @@
-package cattt.gst.library.base.model.enums;
+package cattt.gst.library.base.enums;
 
 public class MatchType {
     public static final int TYPE_BACKGROUND_DRAWABLE = 0;

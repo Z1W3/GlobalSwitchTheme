@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cattt.gst.library.base.model.IMatchViewable;
-import cattt.gst.library.base.model.enums.WindowFocusStateClub;
-import cattt.gst.library.base.model.enums.WindowFocusState;
+import cattt.gst.library.base.enums.WindowFocusStateClub;
+import cattt.gst.library.base.enums.WindowFocusState;
 
 abstract public class BaseSwitchThemeFragment extends BaseFragment implements IMatchViewable {
     private MatchViewHandler handler = new MatchViewHandler(this);

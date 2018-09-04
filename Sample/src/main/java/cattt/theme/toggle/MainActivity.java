@@ -19,10 +19,17 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
 import java.util.concurrent.Executors;
 
 import cattt.gst.library.base.BaseSwitchThemeActivity;
 import cattt.gst.library.base.ParseResourcesRunnable;
+import cattt.gst.library.base.helper.ParseAssetsHelper;
+import cattt.gst.library.base.model.BackgroundBean;
+import cattt.gst.library.base.model.ColorsBean;
+import cattt.gst.library.base.model.SelectorsBean;
+import cattt.gst.library.base.model.StateDrawableBean;
 import cattt.gst.library.utils.toast.ToastUtils;
 import cattt.gst.library.utils.zip.ZipArchive;
 import cattt.gst.library.utils.zip.callback.OnUnzipListener;
@@ -41,6 +48,7 @@ public class MainActivity extends BaseSwitchThemeActivity {
 
 
     private PermissionManager mPermissionManager;
+
     @Override
     protected int getContentViewLayoutID() {
         return R.layout.activity_main;
@@ -112,9 +120,10 @@ public class MainActivity extends BaseSwitchThemeActivity {
             }
             return true;
         }
-        if(id == R.id.action_switch){
+        if (id == R.id.action_switch) {
             try {
-                new ZipArchive().unzip(resourcesZipFile.getAbsolutePath(), outDir.getAbsolutePath(), new OnUnzipListener() {
+//                new ZipArchive().unzip(resourcesZipFile.getPath(), outDir.getPath(), new OnUnzipListener()
+                new ZipArchive().unzip(Environment.getExternalStorageDirectory().getPath() + "/resources.zip", outDir.getPath(), new OnUnzipListener() {
                     @Override
                     public void onUnzipProgress(File target, File out, int percentDone) {
                         ToastUtils.show(getApplicationContext(), "解压缩进度 " + percentDone + "%", Toast.LENGTH_SHORT);
@@ -125,8 +134,32 @@ public class MainActivity extends BaseSwitchThemeActivity {
                     public void onUnzipComplete(File target, File out) {
                         ToastUtils.show(getApplicationContext(), "解压缩完成", Toast.LENGTH_SHORT);
                         Log.e("TT", String.format("onUnzipComplete target = %s, out = %s", target.getAbsolutePath(), out.getAbsolutePath()));
-                        target.delete();
-                        Executors.newFixedThreadPool(3).execute(new ParseResourcesRunnable(out));
+
+//                        target.delete();
+//                        try {
+//                            Vector<ColorsBean> colorsBeans = ParseAssetsHelper.get().parseColorsXml(new File(out.getPath() + "/resources" + ParseAssetsHelper.ASSETS_FILE_NAMES[0]));
+//                            for (final ColorsBean colorsBean : colorsBeans) {
+//                                Log.e("TTTTTTTT", String.format("id = %s, textColor = %d, hintColor = %d, backgroundColor = %d",
+//                                        colorsBean.getId(), colorsBean.getTextColor(), colorsBean.getHintColor(), colorsBean.getBackgroundColor()));
+//                            }
+//                            final Vector<SelectorsBean> beans = ParseAssetsHelper.get().parseSelectorsXml(new File(out.getPath() + "/resources" + ParseAssetsHelper.ASSETS_FILE_NAMES[1]));
+//                            for (final SelectorsBean bean : beans) {
+//                                Log.e("TTTT", "bean.getId() = " + bean.getId());
+//                                for (final StateDrawableBean stateDrawableBean : bean.getStateDrawables()) {
+//                                    Log.e("TTTT", "stateDrawableBean.getDrawable().getPath() = " + stateDrawableBean.getDrawable().getPath());
+//                                    for (int index = 0; index < stateDrawableBean.getStateSets().length; index++) {
+//                                        Log.e("TTTT", String.format("stateDrawableBean.getStateSets().stateSet[%d] = %d",  index, stateDrawableBean.getStateSets()[index]));
+//                                    }
+//                                }
+//                            }
+//                            Vector<BackgroundBean> backgroundBeans = ParseAssetsHelper.get().parseBackgroundsXml(new File(new StringBuffer().append(out.getPath()).append("/resources").append(ParseAssetsHelper.ASSETS_FILE_NAMES[2]).toString()));
+//                            for (final BackgroundBean bean : backgroundBeans) {
+//                                Log.e("TTTTTTTTT", String.format("bean.getId() = %s, bean.getFile().getPath() = %s", bean.getId(), bean.getDrawable().getPath()));
+//                            }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        Executors.newFixedThreadPool(3).execute(new ParseResourcesRunnable(out));
                     }
 
                     @Override
@@ -137,6 +170,18 @@ public class MainActivity extends BaseSwitchThemeActivity {
                     }
                 });
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (id == R.id.action_test) {
+
+            Log.e("aa", "getPath = " + Environment.getExternalStorageDirectory().getPath());
+
+            try {
+//                ParseAssetsHelper.get().parseColorsXml(Environment.getExternalStorageDirectory().getPath() + ParseAssetsHelper.ASSETS_FILE_NAMES[0]);
+                ParseAssetsHelper.get().parseSelectorsXml(Environment.getExternalStorageDirectory().getPath() + ParseAssetsHelper.ASSETS_FILE_NAMES[1]);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -166,6 +211,7 @@ public class MainActivity extends BaseSwitchThemeActivity {
     }
 
     private AlertDialog hintPermissionDialog;
+
     // 提示用户去应用设置界面手动开启权限
     private void showDialogTipUserGoToAppSetting() {
         hintPermissionDialog = new AlertDialog.Builder(this)

@@ -3,7 +3,7 @@ package cattt.gst.library.base.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import cattt.gst.library.base.model.enums.MatchTypeClub;
+import cattt.gst.library.base.enums.MatchTypeClub;
 
 public class GTData implements Parcelable {
 

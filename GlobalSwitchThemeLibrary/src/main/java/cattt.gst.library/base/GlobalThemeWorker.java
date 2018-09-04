@@ -15,7 +15,7 @@ import cattt.gst.library.base.callback.OnGlobalThemeListener;
 import cattt.gst.library.base.model.GTData;
 import cattt.gst.library.base.model.GlobalThemeable;
 import cattt.gst.library.base.model.MatchViewData;
-import cattt.gst.library.base.model.enums.MatchType;
+import cattt.gst.library.base.enums.MatchType;
 import cattt.gst.library.utils.bitmap.File2Bitmap;
 import cattt.gst.library.utils.logger.Log;
 

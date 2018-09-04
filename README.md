@@ -6,8 +6,8 @@
 
 ## 注意点
 1.图片的目录结构以及color.xml内的格式不可更改，更改后app无法解析<br>
-2.图片的命名需要与R.id.xxx的 "xxx"保持一致<br>
-3.color的name命名需要与R.id.xxx的 "xxx"保持一致<br>
+2.图片的命名需要与R.mId.xxx的 "xxx"保持一致<br>
+3.color的name命名需要与R.mId.xxx的 "xxx"保持一致<br>
 
 <img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d1.png" /><br>
 <img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d2.png" /><br>
@@ -21,8 +21,8 @@
   
     @Override
     protected int[] getViewResourcesPendingChangeTheme() {
-        //You View id in the current page
-        return new int[]{R.id.wallpaper2, R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
+        //You View mId in the current page
+        return new int[]{R.mId.wallpaper2, R.mId.toolbar_title, R.mId.button, R.mId.app_compat_button, R.mId.app_compat_text};
     }
   }
 ```

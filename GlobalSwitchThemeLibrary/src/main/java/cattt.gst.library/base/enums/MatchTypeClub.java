@@ -1,4 +1,4 @@
-package cattt.gst.library.base.model.enums;
+package cattt.gst.library.base.enums;
 
 import android.support.annotation.IntDef;
 

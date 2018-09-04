@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import cattt.gst.library.base.model.enums.Visibility;
+import cattt.gst.library.base.enums.Visibility;
 
 abstract public class BaseFragment extends Fragment {
 

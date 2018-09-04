@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import cattt.gst.library.base.model.GTData;
-import cattt.gst.library.base.model.enums.MatchType;
+import cattt.gst.library.base.enums.MatchType;
 
 
 public class ParseResourcesRunnable implements Runnable {
