@@ -108,17 +108,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onUnzipProgress(File target, File out, int percentDone) {
                         ToastUtils.show(getApplicationContext(), "解压缩进度 " + percentDone + "%", Toast.LENGTH_SHORT);
-                        Log.e("TT", String.format("onUnzipProgress target = %s, out = %s, percentDone = %d", target.getPath(), out.getPath(), percentDone));
+                        Log.e("TAG", String.format("onUnzipProgress target = %s, out = %s, percentDone = %d", target.getPath(), out.getPath(), percentDone));
                     }
 
                     @Override
                     public void onUnzipComplete(File target, File out) {
                         ToastUtils.show(getApplicationContext(), "解压缩完成", Toast.LENGTH_SHORT);
-                        Log.e("TT", String.format("onUnzipComplete target = %s, out = %s", target.getPath(), out.getPath()));
+                        Log.e("TAG", String.format("onUnzipComplete target = %s, out = %s", target.getPath(), out.getPath()));
                         final String path = target.getPath();
                         final String substring = path.substring(path.lastIndexOf("/"), path.lastIndexOf("."));
                         final File file = new File(out.getPath() + substring);
                         try {
+                            //开启资源主题适配
                             ParseAssetsHelper.startAsyncParseAssetsXml(getApplicationContext(), FileSafeCode.getSha1(target), file);
                             target.delete();
                         } catch (IOException e) {
@@ -130,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onUnzipFailed(File target, File out, Throwable ex) {
+                        Log.e("TAG", String.format("onUnzipFailed target = %s, out = %s", target.getAbsolutePath(), out.getAbsolutePath()), ex);
                         ToastUtils.show(getApplicationContext(), "解压缩失败", Toast.LENGTH_SHORT);
                         target.delete();
-                        Log.e("TT", String.format("onUnzipFailed target = %s, out = %s", target.getAbsolutePath(), out.getAbsolutePath()), ex);
                     }
                 });
             } catch (Exception e) {
