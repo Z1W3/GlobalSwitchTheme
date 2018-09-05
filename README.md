@@ -5,9 +5,7 @@
 <img width="720" height="480" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/gif/sample.gif" />
 
 ## 注意点
-1.图片的目录结构以及color.xml内的格式不可更改，更改后app无法解析<br>
-2.图片的命名需要与R.mId.xxx的 "xxx"保持一致<br>
-3.color的name命名需要与R.mId.xxx的 "xxx"保持一致<br>
+1.zip包中目录结构以及*.xml内的格式不可更改，更改后app无法解析<br>
 
 <img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d1.png" /><br>
 <img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d2.png" /><br>
