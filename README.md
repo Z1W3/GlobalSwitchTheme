@@ -13,31 +13,86 @@
 <img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d2.png" /><br>
 <img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d3.png" /><br>
 <img width="400" height="350" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d4.png" /><br>
+<img width="400" height="350" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d5.png" /><br>
 
-### 实现
-你的Activity需要继承BaseSwitchThemeActivity,通过添加View id匹配相应的image/color
+### 建立ID关联
 ```java
-  public class MainActivity extends BaseSwitchThemeActivity{
-  
+AssetsHelper mHelper = new AssetsHelper(this, R.id.wallpaper2, R.id.toolbar_title, R.id.button1, R.id.button2);
+```
+### 使用完毕要销毁
+```java
+mHelper.destroyAssetsHelper();
+```
+
+### Activity实现
+```java
+  public class MainActivity extends Activity{
+    private AssetsHelper mHelper;
     @Override
-    protected int[] getViewResourcesPendingChangeTheme() {
-        //You View mId in the current page
-        return new int[]{R.mId.wallpaper2, R.mId.toolbar_title, R.mId.button, R.mId.app_compat_button, R.mId.app_compat_text};
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        //添加ids
+        mHelper = new AssetsHelper(this, R.id.wallpaper2, R.id.toolbar_title, R.id.button1, R.id.button2);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        mHelper.destroyAssetsHelper();
+        super.onDestroy();
+    }
+  }
+```
+
+
+### Fragment实现
+```java
+  public class MainFragment extends Fragment{
+    private AssetsHelper mHelper;
+
+    private int[] mIds = new int[]{
+            R.id.wallpaper2,
+            R.id.image1,
+            R.id.image2,
+            R.id.image3,
+            R.id.image4,
+            R.id.text,
+            R.id.app_compat_text,
+            R.id.edit_text,
+            R.id.app_compat_edit,
+            R.id.button,
+            R.id.app_compat_button
+    };
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_demo2, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mHelper = new AssetsHelper(this, mIds);
+        TextView textView = getView().findViewById(R.id.numberTv);
+        textView.setText("当前第" + number + "页");
+    }
+
+    @Override
+    public void onDestroyView() {
+        mHelper.destroyAssetsHelper();
+        super.onDestroyView();
     }
   }
 ```
 
 #### 开启解析资源
-ParseResourcesRunnable 为解析类，需要在子线程中执行
-
 ```java
-Executors.newFixedThreadPool(3).execute(new ParseResourcesRunnable(out));
-
+ParseAssetsHelper.startAsyncParseAssetsXml(getApplicationContext(), FileSafeCode.getSha1(target), file);
 ```
 
-解析资源与解压配合使用
+解压zip与解析资源类配合使用
 ```java
-new ZipArchive().unzip(resourcesZipFile.getAbsolutePath(), outDir.getAbsolutePath(), new OnUnzipListener() {
+new ZipArchive().unzip(resourcesZipFile.getPath(), outDir.getPath(), new OnUnzipListener() {
                     @Override
                     public void onUnzipProgress(File target, File out, int percentDone) {
                         ToastUtils.show(getApplicationContext(), "解压缩进度 " + percentDone + "%", Toast.LENGTH_SHORT);
@@ -46,8 +101,18 @@ new ZipArchive().unzip(resourcesZipFile.getAbsolutePath(), outDir.getAbsolutePat
                     @Override
                     public void onUnzipComplete(File target, File out) {
                         ToastUtils.show(getApplicationContext(), "解压缩完成", Toast.LENGTH_SHORT);
-                        target.delete();//删除下载zip文件
-                        Executors.newFixedThreadPool(1).execute(new ParseResourcesRunnable(out));
+                        final String path = target.getPath();
+                        final String substring = path.substring(path.lastIndexOf("/"), path.lastIndexOf("."));
+                        final File file = new File(out.getPath() + substring);
+                        try {
+                            //开始解析资源XML内容
+                            ParseAssetsHelper.startAsyncParseAssetsXml(getApplicationContext(), FileSafeCode.getSha1(target), file);
+                            target.delete(); //删除下载的zip包
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
