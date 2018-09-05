@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
                         final File file = new File(out.getPath() + substring);
                         try {
                             ParseAssetsHelper.startAsyncParseAssetsXml(getApplicationContext(), FileSafeCode.getSha1(target), file);
+                            target.delete();
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (NoSuchAlgorithmException e) {
                             e.printStackTrace();
                         }
-//                        target.delete();
                     }
 
                     @Override
