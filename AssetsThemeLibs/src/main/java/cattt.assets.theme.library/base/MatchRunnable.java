@@ -6,9 +6,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.view.ViewCompat;
 import android.util.ArrayMap;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +28,7 @@ import cattt.assets.theme.library.base.model.StateDrawableBean;
 import cattt.assets.theme.library.utils.bitmap.File2Bitmap;
 
 public class MatchRunnable implements Runnable {
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     private Context mContext;
     private boolean mTerminate;
     private ArrayMap<String, View> mIdsMap;
@@ -88,18 +92,18 @@ public class MatchRunnable implements Runnable {
             final View view = mIdsMap.get(bean.getId());
             if (view != null && !mTerminate) {
                 final ArrayList<StateDrawableBean> stateDrawables = bean.getStateDrawables();
-                final StateListDrawable stateListDrawable = new StateListDrawable();
+                final StateListDrawable drawableSets = new StateListDrawable();
                 for (final StateDrawableBean stateDrawable : stateDrawables) {
                     if (mTerminate) {
                         return;
                     }
                     final File drawFile = stateDrawable.getDrawable();
-                    final Bitmap bitmap = getBitmap(view, drawFile);
+                    final Bitmap bitmap = pollingBitmap(view, drawFile);
                     final Drawable draw = new BitmapDrawable(mContext.getResources(), bitmap);
-                    stateListDrawable.addState(stateDrawable.getStateSets(), draw);
+                    drawableSets.addState(stateDrawable.getStateSets(), draw);
                 }
                 if (!mTerminate) {
-                    onChangedBackground(view, stateListDrawable);
+                    onChangedBackground(view, drawableSets);
                 }
             }
         }
@@ -113,22 +117,22 @@ public class MatchRunnable implements Runnable {
             final View view = mIdsMap.get(bean.getId());
             if (view != null && !mTerminate) {
                 final File drawFile = bean.getDrawable();
-                final Bitmap bitmap = getBitmap(view, drawFile);
                 if (!mTerminate) {
-                    final Drawable draw = new BitmapDrawable(mContext.getResources(), bitmap);
-                    onChangedBackground(view, draw);
+                    final Bitmap bitmap = pollingBitmap(view, drawFile);
+                    final Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
+                    onChangedBackground(view, drawable);
                 }
             }
         }
     }
 
-    private Bitmap getBitmap(final View view, final File drawFile) {
+    private Bitmap pollingBitmap(final View view, final File drawFile) {
         do {
             final int width = view.getWidth();
             final int height = view.getHeight();
             if (width != 0 && height != 0) {
                 try {
-                    return File2Bitmap.decodeFile(drawFile, width, height);
+                    return getBitmap(drawFile, width, height);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -141,6 +145,10 @@ public class MatchRunnable implements Runnable {
         }
         while (/*View initialization completed*/!ViewCompat.isLaidOut(view) && !mTerminate);
         return null;
+    }
+
+    private Bitmap getBitmap(final File drawFile, int width, int height) throws IOException {
+        return File2Bitmap.decodeFile(drawFile, width, height);
     }
 
     public void setColorsBeans(final Vector<ColorsBean> beans) {
@@ -165,15 +173,29 @@ public class MatchRunnable implements Runnable {
         return this;
     }
 
-    private void onChangedBackground(View view, Drawable drawable) {
-        if (mListener != null) {
-            mListener.onChangedBackground(view, drawable);
+    private void onChangedBackground(final View view, final Drawable drawable) {
+        if (mListener != null && !mTerminate) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mTerminate) {
+                        mListener.onChangedBackground(view, drawable);
+                    }
+                }
+            });
         }
     }
 
-    private void onChangedFontColor(View view, int textColor, int hintColor) {
-        if (mListener != null) {
-            mListener.onChangedFontColor(view, textColor, hintColor);
+    private void onChangedFontColor(final View view, final int textColor, final int hintColor) {
+        if (mListener != null && !mTerminate) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mTerminate) {
+                        mListener.onChangedFontColor(view, textColor, hintColor);
+                    }
+                }
+            });
         }
     }
 }

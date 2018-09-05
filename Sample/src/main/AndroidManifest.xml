@@ -23,23 +23,15 @@
         </activity>
 
         <activity
-            android:name=".FirstActivity"
+            android:name=".DemoActivity1"
             android:label="FirstActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged">
 
         </activity>
         <activity
-            android:name=".SecondActivity"
-            android:label="SecondActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged">
-
-        </activity>
-        <activity
-            android:name=".ThirdActivity"
+            android:name=".DemoActivity2"
             android:label="ThirdActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged">
-
-        </activity>
+            android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
     </application>
 
 </manifest>

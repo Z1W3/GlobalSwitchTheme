@@ -1,6 +1,8 @@
 package cattt.assets.theme.library.base.parse;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
@@ -16,11 +18,12 @@ import java.util.Vector;
 import java.util.concurrent.Executors;
 
 import cattt.assets.theme.library.base.enums.DrawableStates;
-import cattt.assets.theme.library.base.enums.ParseAssetsTypeClub;
+import cattt.assets.theme.library.base.enums.ParseAssetsType;
 import cattt.assets.theme.library.base.model.BackgroundsBean;
 import cattt.assets.theme.library.base.model.ColorsBean;
 import cattt.assets.theme.library.base.model.SelectorsBean;
 import cattt.assets.theme.library.base.model.StateDrawableBean;
+import cattt.assets.theme.library.base.storage.AssetsStorage;
 import cattt.assets.theme.library.utils.logger.Log;
 
 public class ParseAssetsHelper {
@@ -62,7 +65,7 @@ public class ParseAssetsHelper {
             "hintColor"
     };
 
-    private ParseAssetsHelper() {
+    public ParseAssetsHelper() {
         initStateDrawableMap();
     }
 
@@ -291,15 +294,13 @@ public class ParseAssetsHelper {
         return array;
     }
 
-    public static void startAsyncParseAssetsXml(File outFile, @ParseAssetsTypeClub int token) {
-        Executors.newCachedThreadPool().execute(new ParseAssetsRunnable(outFile, token));
-    }
-
-    protected static ParseAssetsHelper get() {
-        return Helper.INSTANCE;
-    }
-
-    private static final class Helper {
-        private static final ParseAssetsHelper INSTANCE = new ParseAssetsHelper();
+    public static void startAsyncParseAssetsXml(@NonNull Context context, @NonNull String sha1, @NonNull File outFile) {
+        if (context == null || TextUtils.isEmpty(sha1) || !(outFile != null && outFile.exists())) {
+            throw new NullPointerException("Params cannot be null or directory does not exist.");
+        }
+        AssetsStorage.saveChoiceBean(context, sha1, outFile);
+        Executors.newCachedThreadPool().execute(new ParseAssetsRunnable(outFile, ParseAssetsType.COLORS));
+        Executors.newCachedThreadPool().execute(new ParseAssetsRunnable(outFile, ParseAssetsType.SELECTORS));
+        Executors.newCachedThreadPool().execute(new ParseAssetsRunnable(outFile, ParseAssetsType.BACKGROUNDS));
     }
 }

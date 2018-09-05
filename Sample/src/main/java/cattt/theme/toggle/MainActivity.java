@@ -21,14 +21,19 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
+import cattt.assets.theme.library.base.AssetsHelper;
+import cattt.assets.theme.library.base.parse.ParseAssetsHelper;
+import cattt.assets.theme.library.utils.file.FileSafeCode;
 import cattt.assets.theme.library.utils.toast.ToastUtils;
 import cattt.assets.theme.library.utils.zip.ZipArchive;
 import cattt.assets.theme.library.utils.zip.callback.OnUnzipListener;
-import cattt.theme.toggle.permission.PermissionManager;
+import cattt.theme.toggle.utils.download.DownloadUtils;
+import cattt.theme.toggle.utils.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
-    private int[] a = new int[]{R.id.wallpaper2, R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
     private DownloadUtils mDownloadUtils;
     private File resourcesZipFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/resources.zip");
     private File outDir;
@@ -38,38 +43,31 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.INTERNET
     };
 
-
     private PermissionManager mPermissionManager;
+    private AssetsHelper mHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mHelper = new AssetsHelper(this, R.id.wallpaper2, R.id.toolbar_title, R.id.button1, R.id.button2);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_title));
         mDownloadUtils = new DownloadUtils(getApplicationContext());
         mDownloadUtils.registerReceiver(receiver);
         outDir = new File(getApplicationContext().getFilesDir().getAbsolutePath());
         mPermissionManager = new PermissionManager(this, PERMISSIONS);
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FirstActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DemoActivity1.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
         });
-        findViewById(R.id.app_compat_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.app_compat_text).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ThirdActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DemoActivity2.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
@@ -81,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mHelper.destroyAssetsHelper();
         mDownloadUtils.unregisterReceiver(receiver);
         super.onDestroy();
     }
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_download) {
             if (!resourcesZipFile.exists()) {
                 ToastUtils.show(this, "正在下载", Toast.LENGTH_SHORT);
-                mDownloadUtils.downloadFile("http://hcb-cdn.oss-cn-beijing.aliyuncs.com/resources.zip", "resources.zip");
+                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/master/sampleZipResources/resources.zip", "resources.zip");
             } else {
                 ToastUtils.show(this, "文件已经存在", Toast.LENGTH_SHORT);
             }
@@ -117,32 +116,17 @@ public class MainActivity extends AppCompatActivity {
                     public void onUnzipComplete(File target, File out) {
                         ToastUtils.show(getApplicationContext(), "解压缩完成", Toast.LENGTH_SHORT);
                         Log.e("TT", String.format("onUnzipComplete target = %s, out = %s", target.getAbsolutePath(), out.getAbsolutePath()));
-
+                        final String path = target.getPath();
+                        final String substring = path.substring(path.lastIndexOf("/"), path.lastIndexOf("."));
+                        final File file = new File(out.getPath() + substring);
+                        try {
+                            ParseAssetsHelper.startAsyncParseAssetsXml(getApplicationContext(), FileSafeCode.getSha1(target), file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        }
 //                        target.delete();
-//                        try {
-//                            Vector<ColorsBean> colorsBeans = ParseAssetsHelper.get().parseColorsXml(new File(out.getPath() + "/resources" + ParseAssetsHelper.ASSETS_FILE_NAMES[0]));
-//                            for (final ColorsBean colorsBean : colorsBeans) {
-//                                Log.e("TTTTTTTT", String.format("id = %s, textColor = %d, hintColor = %d, backgroundColor = %d",
-//                                        colorsBean.getId(), colorsBean.getTextColor(), colorsBean.getHintColor(), colorsBean.getBackgroundColor()));
-//                            }
-//                            final Vector<SelectorsBean> beans = ParseAssetsHelper.get().parseSelectorsXml(new File(out.getPath() + "/resources" + ParseAssetsHelper.ASSETS_FILE_NAMES[1]));
-//                            for (final SelectorsBean bean : beans) {
-//                                Log.e("TTTT", "bean.getId() = " + bean.getId());
-//                                for (final StateDrawableBean stateDrawableBean : bean.getStateDrawables()) {
-//                                    Log.e("TTTT", "stateDrawableBean.getDrawable().getPath() = " + stateDrawableBean.getDrawable().getPath());
-//                                    for (int index = 0; index < stateDrawableBean.getStateSets().length; index++) {
-//                                        Log.e("TTTT", String.format("stateDrawableBean.getStateSets().stateSet[%d] = %d",  index, stateDrawableBean.getStateSets()[index]));
-//                                    }
-//                                }
-//                            }
-//                            Vector<BackgroundsBean> backgroundBeans = ParseAssetsHelper.get().parseBackgroundsXml(new File(new StringBuffer().append(out.getPath()).append("/resources").append(ParseAssetsHelper.ASSETS_FILE_NAMES[2]).toString()));
-//                            for (final BackgroundsBean bean : backgroundBeans) {
-//                                Log.e("TTTTTTTTT", String.format("bean.getId() = %s, bean.getFile().getPath() = %s", bean.getId(), bean.getDrawable().getPath()));
-//                            }
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        Executors.newFixedThreadPool(3).execute(new ParseResourcesRunnable(out));
                     }
 
                     @Override

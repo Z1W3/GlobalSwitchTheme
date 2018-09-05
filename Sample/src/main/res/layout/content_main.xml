@@ -4,26 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/button1"
+        android:layout_width="270px"
+        android:layout_height="80px"
+        android:padding="0px"
         android:text="跳转至第一个页面" />
 
-    <Button
-        android:id="@+id/app_compat_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button2"
+        android:layout_width="270px"
+        android:layout_height="80px"
+        android:padding="0px"
         android:text="跳转至第二个页面" />
 
-    <Button
-        android:id="@+id/app_compat_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="跳转至第三个页面" />
 </LinearLayout>

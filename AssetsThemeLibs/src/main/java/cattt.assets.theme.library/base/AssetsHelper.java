@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.View;
 import android.widget.EditText;
@@ -24,9 +25,13 @@ import cattt.assets.theme.library.base.enums.ParseAssetsType;
 import cattt.assets.theme.library.base.model.BackgroundsBean;
 import cattt.assets.theme.library.base.model.ColorsBean;
 import cattt.assets.theme.library.base.model.SelectorsBean;
+import cattt.assets.theme.library.base.parse.ParseAssetsHelper;
 import cattt.assets.theme.library.base.parse.ParseAssetsMonitor;
+import cattt.assets.theme.library.base.storage.AssetsStorage;
+import cattt.assets.theme.library.base.storage.ChoiceBean;
 
 public class AssetsHelper implements OnAssetsListener, OnViewThemeListener {
+    private String mSha1Cache;
     private static final long MATCH_DELAY = 64L;
 
     private Context mContext;
@@ -74,6 +79,7 @@ public class AssetsHelper implements OnAssetsListener, OnViewThemeListener {
         final ArrayMap<String, View> map = loadingIdsMapData(activity, ids);
         initMatchRunnable(mContext, map, this);
         ParseAssetsMonitor.get().addOnAssetsListener(this);
+        initialRefreshData();
     }
 
     public AssetsHelper(@NonNull Fragment fragment, @NonNull int... ids) {
@@ -82,6 +88,7 @@ public class AssetsHelper implements OnAssetsListener, OnViewThemeListener {
         final ArrayMap<String, View> map = loadingIdsMapData(fragment, ids);
         initMatchRunnable(mContext, map, this);
         ParseAssetsMonitor.get().addOnAssetsListener(this);
+        initialRefreshData();
     }
 
     private void setTextColor(View view, int textColor) {
@@ -108,6 +115,7 @@ public class AssetsHelper implements OnAssetsListener, OnViewThemeListener {
     }
 
     public void destroyAssetsHelper() {
+        mSha1Cache = null;
         ParseAssetsMonitor.get().removeOnAssetsListener(this);
         destroyAssetsHandler();
         destroyColorsRunnable();
@@ -135,6 +143,30 @@ public class AssetsHelper implements OnAssetsListener, OnViewThemeListener {
             }
         }
         return map;
+    }
+
+    private boolean isAllowLoadAssets() {
+        if (TextUtils.isEmpty(mSha1Cache)) {
+            return true;
+        }
+        final ChoiceBean b = AssetsStorage.getChoiceBean(mContext);
+        if (b == null) {
+            return true;
+        }
+        if (!b.getSha1().equals(mSha1Cache)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 首次运行加载数据
+     */
+    private void initialRefreshData() {
+        final ChoiceBean bean = AssetsStorage.getChoiceBean(mContext);
+        if (isAllowLoadAssets() && bean != null) {
+            ParseAssetsHelper.startAsyncParseAssetsXml(mContext, bean.getSha1(), bean.getFolder());
+        }
     }
 
     private void terminateMatchColors() {
@@ -209,21 +241,21 @@ public class AssetsHelper implements OnAssetsListener, OnViewThemeListener {
     }
 
     private void startMatchColorsThread(Vector<ColorsBean> beans) {
-        if (mColorsRunnable != null) {
+        if (mColorsRunnable != null && isAllowLoadAssets()) {
             mColorsRunnable.setColorsBeans(beans);
             Executors.newCachedThreadPool().execute(mColorsRunnable.pending());
         }
     }
 
     private void startMatchSelectorsThread(Vector<SelectorsBean> beans) {
-        if (mSelectorsRunnable != null) {
+        if (mSelectorsRunnable != null && isAllowLoadAssets()) {
             mSelectorsRunnable.setSelectorsBean(beans);
             Executors.newCachedThreadPool().execute(mSelectorsRunnable.pending());
         }
     }
 
     private void startMatchBackgroundsThread(Vector<BackgroundsBean> beans) {
-        if (mBackgroundsRunnable != null) {
+        if (mBackgroundsRunnable != null && isAllowLoadAssets()) {
             mBackgroundsRunnable.setBackgroundsBean(beans);
             Executors.newCachedThreadPool().execute(mBackgroundsRunnable.pending());
         }
