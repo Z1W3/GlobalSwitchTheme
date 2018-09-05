@@ -104,8 +104,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_switch) {
             try {
-//                new ZipArchive().unzip(resourcesZipFile.getPath(), outDir.getPath(), new OnUnzipListener()
-                new ZipArchive().unzip(Environment.getExternalStorageDirectory().getPath() + "/resources.zip", outDir.getPath(), new OnUnzipListener() {
+                new ZipArchive().unzip(resourcesZipFile.getPath(), outDir.getPath(), new OnUnzipListener() {
                     @Override
                     public void onUnzipProgress(File target, File out, int percentDone) {
                         ToastUtils.show(getApplicationContext(), "解压缩进度 " + percentDone + "%", Toast.LENGTH_SHORT);
