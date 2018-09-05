@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_download) {
             if (!resourcesZipFile.exists()) {
                 ToastUtils.show(this, "正在下载", Toast.LENGTH_SHORT);
-                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/master/sampleZipResources/resources.zip", "resources.zip");
+//                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/master/sampleZipResources/resources.zip", "resources.zip");
+                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/add_selector_match_image_function/sampleZipResources/resources.zip", "resources.zip");
             } else {
                 ToastUtils.show(this, "文件已经存在", Toast.LENGTH_SHORT);
             }
@@ -108,13 +109,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onUnzipProgress(File target, File out, int percentDone) {
                         ToastUtils.show(getApplicationContext(), "解压缩进度 " + percentDone + "%", Toast.LENGTH_SHORT);
-                        Log.e("TT", String.format("onUnzipProgress target = %s, out = %s, percentDone = %d", target.getAbsolutePath(), out.getAbsolutePath(), percentDone));
+                        Log.e("TT", String.format("onUnzipProgress target = %s, out = %s, percentDone = %d", target.getPath(), out.getPath(), percentDone));
                     }
 
                     @Override
                     public void onUnzipComplete(File target, File out) {
                         ToastUtils.show(getApplicationContext(), "解压缩完成", Toast.LENGTH_SHORT);
-                        Log.e("TT", String.format("onUnzipComplete target = %s, out = %s", target.getAbsolutePath(), out.getAbsolutePath()));
+                        Log.e("TT", String.format("onUnzipComplete target = %s, out = %s", target.getPath(), out.getPath()));
                         final String path = target.getPath();
                         final String substring = path.substring(path.lastIndexOf("/"), path.lastIndexOf("."));
                         final File file = new File(out.getPath() + substring);
