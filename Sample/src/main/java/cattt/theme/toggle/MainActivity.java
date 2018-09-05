@@ -96,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_download) {
             if (!resourcesZipFile.exists()) {
                 ToastUtils.show(this, "正在下载", Toast.LENGTH_SHORT);
-//                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/master/sampleZipResources/resources.zip", "resources.zip");
-                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/add_selector_match_image_function/sampleZipResources/resources.zip", "resources.zip");
+                mDownloadUtils.downloadFile("https://raw.githubusercontent.com/LuckWei/GlobalSwitchTheme/master/sampleZipResources/resources.zip", "resources.zip");
             } else {
                 ToastUtils.show(this, "文件已经存在", Toast.LENGTH_SHORT);
             }
