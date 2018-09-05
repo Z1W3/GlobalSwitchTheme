@@ -10,7 +10,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,24 +21,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-import java.util.concurrent.Executors;
 
-import cattt.gst.library.base.BaseSwitchThemeActivity;
-import cattt.gst.library.base.ParseResourcesRunnable;
-import cattt.gst.library.base.helper.ParseAssetsHelper;
-import cattt.gst.library.base.model.BackgroundBean;
-import cattt.gst.library.base.model.ColorsBean;
-import cattt.gst.library.base.model.SelectorsBean;
-import cattt.gst.library.base.model.StateDrawableBean;
-import cattt.gst.library.utils.toast.ToastUtils;
-import cattt.gst.library.utils.zip.ZipArchive;
-import cattt.gst.library.utils.zip.callback.OnUnzipListener;
+import cattt.assets.theme.library.utils.toast.ToastUtils;
+import cattt.assets.theme.library.utils.zip.ZipArchive;
+import cattt.assets.theme.library.utils.zip.callback.OnUnzipListener;
 import cattt.theme.toggle.permission.PermissionManager;
 
-public class MainActivity extends BaseSwitchThemeActivity {
-
+public class MainActivity extends AppCompatActivity {
+    private int[] a = new int[]{R.id.wallpaper2, R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
     private DownloadUtils mDownloadUtils;
     private File resourcesZipFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/resources.zip");
     private File outDir;
@@ -50,18 +42,9 @@ public class MainActivity extends BaseSwitchThemeActivity {
     private PermissionManager mPermissionManager;
 
     @Override
-    protected int getContentViewLayoutID() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    protected int[] getViewResourcesPendingChangeTheme() {
-        return new int[]{R.id.wallpaper2, R.id.toolbar_title, R.id.button, R.id.app_compat_button, R.id.app_compat_text};
-    }
-
-    @Override
-    protected void onInitView(Bundle savedInstanceState) {
-        super.onInitView(savedInstanceState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_title));
         mDownloadUtils = new DownloadUtils(getApplicationContext());
         mDownloadUtils.registerReceiver(receiver);
@@ -97,9 +80,9 @@ public class MainActivity extends BaseSwitchThemeActivity {
     }
 
     @Override
-    protected void onBeforeDestroy() {
-        super.onBeforeDestroy();
+    protected void onDestroy() {
         mDownloadUtils.unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     @Override
@@ -152,8 +135,8 @@ public class MainActivity extends BaseSwitchThemeActivity {
 //                                    }
 //                                }
 //                            }
-//                            Vector<BackgroundBean> backgroundBeans = ParseAssetsHelper.get().parseBackgroundsXml(new File(new StringBuffer().append(out.getPath()).append("/resources").append(ParseAssetsHelper.ASSETS_FILE_NAMES[2]).toString()));
-//                            for (final BackgroundBean bean : backgroundBeans) {
+//                            Vector<BackgroundsBean> backgroundBeans = ParseAssetsHelper.get().parseBackgroundsXml(new File(new StringBuffer().append(out.getPath()).append("/resources").append(ParseAssetsHelper.ASSETS_FILE_NAMES[2]).toString()));
+//                            for (final BackgroundsBean bean : backgroundBeans) {
 //                                Log.e("TTTTTTTTT", String.format("bean.getId() = %s, bean.getFile().getPath() = %s", bean.getId(), bean.getDrawable().getPath()));
 //                            }
 //                        } catch (IOException e) {
@@ -170,18 +153,6 @@ public class MainActivity extends BaseSwitchThemeActivity {
                     }
                 });
             } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (id == R.id.action_test) {
-
-            Log.e("aa", "getPath = " + Environment.getExternalStorageDirectory().getPath());
-
-            try {
-//                ParseAssetsHelper.get().parseColorsXml(Environment.getExternalStorageDirectory().getPath() + ParseAssetsHelper.ASSETS_FILE_NAMES[0]);
-                ParseAssetsHelper.get().parseSelectorsXml(Environment.getExternalStorageDirectory().getPath() + ParseAssetsHelper.ASSETS_FILE_NAMES[1]);
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

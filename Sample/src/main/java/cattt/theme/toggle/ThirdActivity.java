@@ -1,31 +1,22 @@
 package cattt.theme.toggle;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import cattt.gst.library.base.BaseSwitchThemeActivity;
-
-public class ThirdActivity extends BaseSwitchThemeActivity {
-    @Override
-    protected int getContentViewLayoutID() {
-        return R.layout.activity_third;
-    }
-
+public class ThirdActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     @Override
-    protected int[] getViewResourcesPendingChangeTheme() {
-        return new int[]{R.id.toolbar_title};
-    }
-
-    @Override
-    protected void onInitView(Bundle savedInstanceState) {
-        super.onInitView(savedInstanceState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_third);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_title));
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

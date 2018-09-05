@@ -1,4 +1,4 @@
 /build
-/debug
 /release
-*.iml
+/debug
+*iml
