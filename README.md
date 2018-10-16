@@ -44,17 +44,9 @@ mHelper.destroyAssetsHelper();
   public class MainFragment extends Fragment{
     private AssetsHelper mHelper;
 
-    private int[] mIds = new int[]{
-            R.id.wallpaper2,
-            R.id.image1,
-            R.id.image2,
-            R.id.image3,
-            R.id.image4,
-            R.id.text,
-            R.id.app_compat_text,
-            R.id.edit_text,
-            R.id.app_compat_edit,
-            R.id.button,
+    private int[] mIds = new int[]{ R.id.wallpaper2, R.id.image1, R.id.image2,
+            R.id.image3, R.id.image4, R.id.text, R.id.app_compat_text,
+            R.id.edit_text, R.id.app_compat_edit, R.id.button,
             R.id.app_compat_button
     };
     @Nullable
