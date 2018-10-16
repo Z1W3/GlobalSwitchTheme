@@ -6,13 +6,7 @@
 
 ## 注意点
 1.zip包中目录结构以及*.xml内的格式不可更改，更改后app无法解析<br>
-
-<img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d1.png" /><br>
-<img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d2.png" /><br>
-<img width="350" height="100" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d3.png" /><br>
-<img width="400" height="350" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d4.png" /><br>
-<img width="400" height="350" src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/image/d5.png" /><br>
-
+<a src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/sampleZipResources/resources.zip">目录结构请自行下载查看</a>
 ### 建立ID关联
 ```java
 AssetsHelper mHelper = new AssetsHelper(this, R.id.wallpaper2, R.id.toolbar_title, R.id.button1, R.id.button2);
