@@ -6,7 +6,9 @@
 
 ## 注意点
 1.zip包中目录结构以及*.xml内的格式不可更改，更改后app无法解析<br>
-<a src="https://github.com/LuckWei/GlobalSwitchTheme/blob/master/sampleZipResources/resources.zip">目录结构请自行下载查看</a>
+
+[@目录结构请下载查看](https://github.com/LuckWei/GlobalSwitchTheme/blob/master/sampleZipResources/resources.zip)
+
 ### 建立ID关联
 ```java
 AssetsHelper mHelper = new AssetsHelper(this, R.id.wallpaper2, R.id.toolbar_title, R.id.button1, R.id.button2);
